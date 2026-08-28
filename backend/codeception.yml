@@ -1,0 +1,26 @@
+namespace: backend\tests
+bootstrap: bootstrap.php
+support_namespace: Support
+paths:
+    tests: tests
+    output: tests/Support/output
+    data: tests/Support/data
+    support: tests/Support
+    envs: tests/Support/envs
+actor_suffix: Tester
+settings:
+    memory_limit: 1024M
+    colors: true
+modules:
+    config:
+        Yii2:
+            configFile: 'config/codeception-local.php'
+extensions:
+    enabled:
+        - Codeception\Extension\RunFailed
+coverage:
+    enabled: true
+    include:
+        - /controllers/*
+        - /models/*
+        - /views/*

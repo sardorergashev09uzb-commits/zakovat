@@ -1,0 +1,1522 @@
+/* =========================================================================
+   ZAKOVAT — style.css
+   Intellektual bilim/test platformasi uchun umumiy stil fayli.
+   Barcha sahifalar shu faylni ulaydi: <link rel="stylesheet" href="style.css">
+
+   TARKIB:
+   1. Design tokens (ranglar, shriftlar, radiuslar)
+   2. Reset va asosiy elementlar
+   3. Layout yordamchilari (container, grid)
+   4. Komponentlar: navbar, footer, tugmalar, kartalar, formalar
+   5. Sahifaga xos bloklar (hero, quiz, natija, profil, reyting, admin)
+   6. "Bilim halqasi" (knowledge ring) — signature SVG progress komponenti
+   7. Media query'lar (responsive)
+   ========================================================================= */
+
+/* -------------------------------------------------------------------------
+   1. DESIGN TOKENS
+   ------------------------------------------------------------------------- */
+:root {
+  /* Ranglar */
+  --color-bg: #F8F9FA;
+  --color-surface: #FFFFFF;
+  --color-primary: #3C3489;
+  --color-primary-dark: #2B2566;
+  --color-primary-light: #ECEAF7;
+  --color-primary-soft: #F2F1FA;
+  --color-accent-gold: #D9A441; /* reyting/yutuq uchun urg'u */
+  --color-success: #1F9D55;
+  --color-success-bg: #E7F7EC;
+  --color-error: #D64545;
+  --color-error-bg: #FCEBEB;
+  --color-text: #1C1B29;
+  --color-text-muted: #6B6A80;
+  --color-text-faint: #9694A8;
+  --color-border: #E6E5EF;
+  --color-border-strong: #D3D1E3;
+
+  /* Tipografiya */
+  --font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Radiuslar */
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --radius-pill: 999px;
+
+  /* Soyalar (juda yengil) */
+  --shadow-sm: 0 1px 2px rgba(28, 27, 41, 0.05);
+  --shadow-md: 0 4px 16px rgba(28, 27, 41, 0.08);
+  --shadow-primary: 0 6px 20px rgba(60, 52, 137, 0.18);
+
+  /* Bo'shliqlar */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* Konteyner kengligi */
+  --container-width: 1140px;
+}
+
+/* -------------------------------------------------------------------------
+   2. RESET VA ASOSIY ELEMENTLAR
+   ------------------------------------------------------------------------- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-main);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+input, select, textarea {
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+h1, h2, h3, h4 {
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+/* Klaviatura bilan navigatsiya qilayotganlar uchun aniq fokus holati */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* -------------------------------------------------------------------------
+   3. LAYOUT YORDAMCHILARI
+   ------------------------------------------------------------------------- */
+.container {
+  width: 100%;
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: 0 var(--space-5);
+}
+
+.grid {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.section {
+  padding: var(--space-8) 0;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-muted {
+  color: var(--color-text-muted);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* -------------------------------------------------------------------------
+   4. NAVBAR
+   ------------------------------------------------------------------------- */
+.navbar {
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.navbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: var(--space-4);
+  padding-bottom: var(--space-4);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--color-primary-dark);
+}
+
+.logo__mark {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+}
+
+.nav-links a {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  transition: color 0.15s ease;
+}
+
+.nav-links a:hover,
+.nav-links a.is-active {
+  color: var(--color-primary);
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+/* <!-- PHP: agar foydalanuvchi login qilmagan bo'lsa .nav-actions--guest ko'rinadi --> */
+.nav-actions--guest {
+  display: flex;
+}
+
+/* <!-- PHP: agar foydalanuvchi login qilgan bo'lsa .nav-actions--user ko'rinadi --> */
+.nav-actions--user {
+  display: none;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.nav-user {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.nav-user__avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--color-primary-light);
+  color: var(--color-primary-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  padding: var(--space-2);
+}
+
+.nav-toggle span {
+  width: 22px;
+  height: 2px;
+  background-color: var(--color-text);
+}
+
+/* -------------------------------------------------------------------------
+   4b. TUGMALAR
+   ------------------------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: 11px 22px;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: 1px solid transparent;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.15s ease, color 0.15s ease;
+  white-space: nowrap;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn-primary {
+  background-color: var(--color-primary);
+  color: #fff;
+  box-shadow: var(--shadow-primary);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-dark);
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: var(--color-primary);
+  border-color: var(--color-border-strong);
+}
+
+.btn-outline:hover {
+  background-color: var(--color-primary-soft);
+  border-color: var(--color-primary);
+}
+
+.btn-ghost {
+  background-color: transparent;
+  color: var(--color-text-muted);
+}
+
+.btn-ghost:hover {
+  color: var(--color-primary);
+}
+
+.btn-danger {
+  background-color: var(--color-error-bg);
+  color: var(--color-error);
+}
+
+.btn-danger:hover {
+  background-color: var(--color-error);
+  color: #fff;
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.btn-sm {
+  padding: 7px 14px;
+  font-size: 0.85rem;
+}
+
+/* -------------------------------------------------------------------------
+   4c. KARTALAR
+   ------------------------------------------------------------------------- */
+.card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.card-pad {
+  padding: var(--space-5);
+}
+
+/* -------------------------------------------------------------------------
+   4d. FORMALAR
+   ------------------------------------------------------------------------- */
+.form-card {
+  max-width: 420px;
+  margin: var(--space-8) auto;
+  padding: var(--space-6);
+}
+
+.form-card__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  font-weight: 700;
+  margin-bottom: var(--space-4);
+}
+
+.form-card h1 {
+  font-size: 1.5rem;
+  margin-bottom: var(--space-2);
+}
+
+.form-card__subtitle {
+  color: var(--color-text-muted);
+  font-size: 0.92rem;
+  margin-bottom: var(--space-5);
+}
+
+.form-group {
+  margin-bottom: var(--space-4);
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.88rem;
+  font-weight: 600;
+  margin-bottom: var(--space-2);
+  color: var(--color-text);
+}
+
+.form-control {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-control:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-light);
+  outline: none;
+}
+
+.form-control.is-invalid {
+  border-color: var(--color-error);
+}
+
+.form-error {
+  display: none;
+  color: var(--color-error);
+  font-size: 0.82rem;
+  margin-top: var(--space-2);
+}
+
+.form-error.is-visible {
+  display: block;
+}
+
+.form-hint {
+  font-size: 0.8rem;
+  color: var(--color-text-faint);
+  margin-top: var(--space-2);
+}
+
+.form-footer-link {
+  text-align: center;
+  margin-top: var(--space-5);
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+}
+
+.form-footer-link a {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.form-divider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: var(--space-5) 0;
+  color: var(--color-text-faint);
+  font-size: 0.8rem;
+}
+
+.form-divider::before,
+.form-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background-color: var(--color-border);
+}
+
+/* -------------------------------------------------------------------------
+   5a. HERO (index.html)
+   ------------------------------------------------------------------------- */
+.hero {
+  padding: var(--space-8) 0;
+}
+
+.hero__inner {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: var(--space-7);
+  align-items: center;
+}
+
+.hero__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-primary-light);
+  color: var(--color-primary-dark);
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin-bottom: var(--space-4);
+}
+
+.hero h1 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  margin-bottom: var(--space-4);
+}
+
+.hero h1 span {
+  color: var(--color-primary);
+}
+
+.hero p {
+  font-size: 1.05rem;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-5);
+  max-width: 480px;
+}
+
+.hero__actions {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.hero__visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* "Qanday ishlaydi" bo'limi */
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-5);
+}
+
+.step-card {
+  padding: var(--space-5);
+  text-align: left;
+}
+
+.step-card__num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  background-color: var(--color-primary);
+  color: #fff;
+  font-weight: 700;
+  margin-bottom: var(--space-4);
+}
+
+.step-card h3 {
+  margin-bottom: var(--space-2);
+  font-size: 1.05rem;
+}
+
+.step-card p {
+  color: var(--color-text-muted);
+  font-size: 0.92rem;
+}
+
+/* Statistika bloki */
+.stats-band {
+  background-color: var(--color-primary-dark);
+  color: #fff;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  text-align: center;
+}
+
+.stat-item__num {
+  font-size: 2.1rem;
+  font-weight: 700;
+  margin-bottom: var(--space-1);
+}
+
+.stat-item__label {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.section-heading {
+  text-align: center;
+  max-width: 560px;
+  margin: 0 auto var(--space-6);
+}
+
+.section-heading h2 {
+  font-size: 1.85rem;
+  margin-bottom: var(--space-3);
+}
+
+.section-heading p {
+  color: var(--color-text-muted);
+}
+
+/* -------------------------------------------------------------------------
+   5b. FOOTER
+   ------------------------------------------------------------------------- */
+.site-footer {
+  background-color: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  padding: var(--space-7) 0 var(--space-5);
+  margin-top: var(--space-7);
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: var(--space-6);
+  margin-bottom: var(--space-6);
+}
+
+.footer-col h4 {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-faint);
+  margin-bottom: var(--space-4);
+}
+
+.footer-col a,
+.footer-col p {
+  display: block;
+  color: var(--color-text-muted);
+  font-size: 0.92rem;
+  margin-bottom: var(--space-2);
+}
+
+.footer-col a:hover {
+  color: var(--color-primary);
+}
+
+.footer-bottom {
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  color: var(--color-text-faint);
+}
+
+/* -------------------------------------------------------------------------
+   5c. KATEGORIYALAR (categories.html)
+   ------------------------------------------------------------------------- */
+.page-header {
+  padding: var(--space-6) 0 var(--space-5);
+}
+
+.page-header h1 {
+  font-size: 1.9rem;
+  margin-bottom: var(--space-2);
+}
+
+.filter-bar {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-6);
+}
+
+.filter-chip {
+  padding: 8px 16px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-border-strong);
+  background-color: var(--color-surface);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  transition: all 0.15s ease;
+}
+
+.filter-chip.is-active,
+.filter-chip:hover {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+}
+
+.category-grid {
+  grid-template-columns: repeat(3, 1fr);
+  padding-bottom: var(--space-8);
+}
+
+.quiz-card {
+  padding: var(--space-5);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.quiz-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--color-primary-light);
+}
+
+.quiz-card__icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.quiz-card h3 {
+  font-size: 1.1rem;
+}
+
+.quiz-card__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-top: auto;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border);
+}
+
+.difficulty {
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+.difficulty--easy {
+  background-color: var(--color-success-bg);
+  color: var(--color-success);
+}
+
+.difficulty--medium {
+  background-color: #FBF2E3;
+  color: #B8791F;
+}
+
+.difficulty--hard {
+  background-color: var(--color-error-bg);
+  color: var(--color-error);
+}
+
+/* -------------------------------------------------------------------------
+   5d. QUIZ SAHIFASI (quiz.html)
+   ------------------------------------------------------------------------- */
+.quiz-shell {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-5) var(--space-8);
+}
+
+.quiz-topbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+  margin-bottom: var(--space-6);
+}
+
+.progress-track {
+  flex: 1;
+  height: 8px;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-border);
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 30%;
+  background-color: var(--color-primary);
+  border-radius: var(--radius-pill);
+  transition: width 0.35s ease;
+}
+
+.progress-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+/* Bilim halqasi — signature aylanma taymer komponenti */
+.knowledge-ring {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+}
+
+.knowledge-ring svg {
+  transform: rotate(-90deg);
+  width: 100%;
+  height: 100%;
+}
+
+.knowledge-ring circle {
+  fill: none;
+  stroke-width: 5;
+}
+
+.knowledge-ring__track {
+  stroke: var(--color-border);
+}
+
+.knowledge-ring__fill {
+  stroke: var(--color-primary);
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1s linear, stroke 0.3s ease;
+}
+
+.knowledge-ring__fill.is-urgent {
+  stroke: var(--color-error);
+}
+
+.knowledge-ring__value {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--color-text);
+}
+
+.question-card {
+  padding: var(--space-6);
+  margin-bottom: var(--space-5);
+}
+
+.question-card__category {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: var(--space-3);
+}
+
+.question-card h2 {
+  font-size: 1.35rem;
+  line-height: 1.5;
+}
+
+.answer-options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.answer-option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  border: 1.5px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.answer-option:hover {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-soft);
+}
+
+.answer-option input[type="radio"] {
+  display: none;
+}
+
+.answer-option__marker {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1.5px solid var(--color-border-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+}
+
+.answer-option.is-selected {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-soft);
+}
+
+.answer-option.is-selected .answer-option__marker {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+}
+
+.answer-option.is-correct {
+  border-color: var(--color-success);
+  background-color: var(--color-success-bg);
+}
+
+.answer-option.is-correct .answer-option__marker {
+  background-color: var(--color-success);
+  border-color: var(--color-success);
+  color: #fff;
+}
+
+.answer-option.is-wrong {
+  border-color: var(--color-error);
+  background-color: var(--color-error-bg);
+}
+
+.answer-option.is-wrong .answer-option__marker {
+  background-color: var(--color-error);
+  border-color: var(--color-error);
+  color: #fff;
+}
+
+.quiz-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* -------------------------------------------------------------------------
+   5e. NATIJA SAHIFASI (result.html)
+   ------------------------------------------------------------------------- */
+.result-shell {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-5);
+  text-align: center;
+}
+
+.result-ring {
+  width: 176px;
+  height: 176px;
+  margin: 0 auto var(--space-6);
+  position: relative;
+}
+
+.result-ring svg {
+  transform: rotate(-90deg);
+  width: 100%;
+  height: 100%;
+}
+
+.result-ring circle {
+  fill: none;
+  stroke-width: 12;
+}
+
+.result-ring__track {
+  stroke: var(--color-border);
+}
+
+.result-ring__fill {
+  stroke: var(--color-success);
+  stroke-linecap: round;
+  animation: ring-grow 1.1s ease forwards;
+}
+
+@keyframes ring-grow {
+  from { stroke-dashoffset: 440; }
+}
+
+.result-ring__value {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.result-ring__percent {
+  font-size: 2.2rem;
+  font-weight: 700;
+  animation: pop-in 0.5s ease 0.6s both;
+}
+
+.result-ring__percent-label {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+@keyframes pop-in {
+  from { opacity: 0; transform: scale(0.85); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.result-title {
+  font-size: 1.6rem;
+  margin-bottom: var(--space-2);
+}
+
+.result-subtitle {
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-6);
+}
+
+.result-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+}
+
+.result-stat {
+  padding: var(--space-4);
+}
+
+.result-stat__num {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.result-stat__num--success { color: var(--color-success); }
+.result-stat__num--error { color: var(--color-error); }
+
+.result-stat__label {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  margin-top: var(--space-1);
+}
+
+.result-actions {
+  display: flex;
+  gap: var(--space-3);
+  justify-content: center;
+}
+
+/* -------------------------------------------------------------------------
+   5f. PROFIL (profile.html)
+   ------------------------------------------------------------------------- */
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+  padding: var(--space-6);
+  margin-bottom: var(--space-5);
+}
+
+.profile-avatar {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.profile-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: var(--space-1);
+}
+
+.profile-stats-grid {
+  grid-template-columns: repeat(4, 1fr);
+  margin-bottom: var(--space-6);
+}
+
+.profile-stat-card {
+  padding: var(--space-5);
+  text-align: center;
+}
+
+.profile-stat-card__num {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.profile-stat-card__label {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-top: var(--space-1);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table th {
+  text-align: left;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--color-text-faint);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.data-table td {
+  padding: var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+  font-size: 0.92rem;
+}
+
+.data-table tr:last-child td {
+  border-bottom: none;
+}
+
+.badge {
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badge--success { background-color: var(--color-success-bg); color: var(--color-success); }
+.badge--error { background-color: var(--color-error-bg); color: var(--color-error); }
+
+/* -------------------------------------------------------------------------
+   5g. REYTING (leaderboard.html)
+   ------------------------------------------------------------------------- */
+.leaderboard-podium {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+  align-items: end;
+  margin-bottom: var(--space-6);
+}
+
+.podium-card {
+  padding: var(--space-5);
+  text-align: center;
+}
+
+.podium-card--first {
+  border-color: var(--color-accent-gold);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-12px);
+}
+
+.podium-rank {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: var(--color-primary-light);
+  color: var(--color-primary-dark);
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-bottom: var(--space-3);
+}
+
+.podium-card--first .podium-rank {
+  background-color: var(--color-accent-gold);
+  color: #fff;
+}
+
+.podium-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--color-primary-light);
+  color: var(--color-primary-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  margin: 0 auto var(--space-3);
+}
+
+.podium-score {
+  color: var(--color-primary);
+  font-weight: 700;
+  margin-top: var(--space-1);
+}
+
+.leaderboard-table-wrap {
+  overflow-x: auto;
+}
+
+.leaderboard-row--current {
+  background-color: var(--color-primary-light);
+}
+
+.leaderboard-row--current td:first-child {
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+}
+
+.rank-num {
+  font-weight: 700;
+  color: var(--color-text-muted);
+}
+
+.player-cell {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.player-cell__avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background-color: var(--color-primary-light);
+  color: var(--color-primary-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+/* -------------------------------------------------------------------------
+   5h. ADMIN PANEL
+   ------------------------------------------------------------------------- */
+.admin-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  min-height: calc(100vh - 65px);
+}
+
+.admin-sidebar {
+  background-color: var(--color-surface);
+  border-right: 1px solid var(--color-border);
+  padding: var(--space-5) var(--space-4);
+}
+
+.admin-sidebar__title {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-faint);
+  padding: 0 var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.admin-nav-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border-radius: var(--radius-sm);
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-1);
+}
+
+.admin-nav-link:hover {
+  background-color: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+.admin-nav-link.is-active {
+  background-color: var(--color-primary);
+  color: #fff;
+}
+
+.admin-main {
+  padding: var(--space-6);
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-6);
+}
+
+.admin-header h1 {
+  font-size: 1.5rem;
+}
+
+.admin-kpi-grid {
+  grid-template-columns: repeat(4, 1fr);
+  margin-bottom: var(--space-6);
+}
+
+.kpi-card {
+  padding: var(--space-5);
+}
+
+.kpi-card__label {
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-2);
+}
+
+.kpi-card__num {
+  font-size: 1.7rem;
+  font-weight: 700;
+}
+
+.admin-table-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-4);
+  gap: var(--space-3);
+}
+
+.icon-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-border-strong);
+  background-color: var(--color-surface);
+  color: var(--color-text-muted);
+  transition: all 0.15s ease;
+}
+
+.icon-btn:hover {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.icon-btn--danger:hover {
+  color: var(--color-error);
+  border-color: var(--color-error);
+}
+
+.actions-cell {
+  display: flex;
+  gap: var(--space-2);
+}
+
+/* Modal (savol qo'shish/tahrirlash) */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(28, 27, 41, 0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-5);
+  z-index: 200;
+}
+
+.modal-overlay.is-open {
+  display: flex;
+}
+
+.modal {
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+  max-width: 560px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: var(--space-6);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-5);
+}
+
+.modal-header h2 {
+  font-size: 1.2rem;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.3rem;
+  color: var(--color-text-muted);
+  line-height: 1;
+  padding: var(--space-1);
+}
+
+.option-input-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.option-input-row input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-success);
+  flex-shrink: 0;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+}
+
+/* -------------------------------------------------------------------------
+   7. RESPONSIVE
+   ------------------------------------------------------------------------- */
+@media (max-width: 960px) {
+  .hero__inner {
+    grid-template-columns: 1fr;
+  }
+
+  .hero__visual {
+    order: -1;
+  }
+
+  .steps {
+    grid-template-columns: 1fr;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-5);
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  .category-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .profile-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .admin-kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .admin-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-sidebar {
+    display: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .nav-links {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    flex-direction: column;
+    align-items: flex-start;
+    padding: var(--space-4) var(--space-5);
+    gap: var(--space-4);
+    display: none;
+  }
+
+  .nav-links.is-open {
+    display: flex;
+  }
+
+  .nav-toggle {
+    display: flex;
+  }
+
+  .leaderboard-podium {
+    grid-template-columns: 1fr;
+  }
+
+  .podium-card--first {
+    transform: none;
+    order: -1;
+  }
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 0 var(--space-4);
+  }
+
+  .category-grid,
+  .result-stats,
+  .profile-stats-grid,
+  .admin-kpi-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .result-actions {
+    flex-direction: column;
+  }
+
+  .quiz-topbar {
+    flex-wrap: wrap;
+  }
+}
