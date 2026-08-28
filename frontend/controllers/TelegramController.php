@@ -69,10 +69,11 @@ class TelegramController extends Controller
             $msg = $update['message'];
             $chatId = $msg['chat']['id'];
             $text = trim($msg['text'] ?? '');
+            $name = $msg['from']['first_name'] ?? 'Foydalanuvchi';
 
             if ($text === '/start') {
-                $welcome = "👋 <b>Assalomu alaykum, Zakovat intellektual platformasiga xush kelibsiz!</b>\n\n"
-                    . "Bu bot orqali siz intellektual salohiyatingizni sinashingiz va turli sohalar bo'yicha savollarga javob berishingiz mumkin.\n\n"
+                $welcome = "👋 <b>Assalomu alaykum, {$name}! Zakovat intellektual platformasiga xush kelibsiz!</b>\n\n"
+                    . "🧠 Bu bot orqali siz intellektual salohiyatingizni sinashingiz va turli sohalar bo'yicha savollarga javob berishingiz mumkin.\n\n"
                     . "👇 <b>Quyidagi menyudan birini tanlang:</b>";
 
                 $keyboard = [
@@ -85,19 +86,17 @@ class TelegramController extends Controller
 
                 $bot->sendMessage($chatId, $welcome, $keyboard);
             } elseif ($text === '/savol' || $text === '💡 Tasodifiy Zakovat savoli') {
-                $this->sendRandomZakovatQuestion($bot, $chatId);
+                $this->sendZakovatQuestion($bot, $chatId);
             } elseif ($text === '/test' || $text === '📝 Variantli Test') {
-                $this->sendRandomTestPoll($bot, $chatId);
+                $this->sendTestPoll($bot, $chatId);
             } elseif ($text === '/kategoriyalar' || $text === '📂 Kategoriyalar') {
-                $this->sendCategoriesList($bot, $chatId);
+                $this->sendCategoriesMenu($bot, $chatId);
             } elseif ($text === '/kun_savoli' || $text === '🌟 Kun savoli') {
                 $this->sendDailyQuestion($bot, $chatId);
-            } else {
-                $bot->sendMessage($chatId, "Quyidagi tugmalardan birini bosing yoki /savol deb yozing.");
             }
         }
 
-        // 2. Callback query (Inline tugmalar bosilganda)
+        // 2. Callback query (Inline tugmalar)
         if (isset($update['callback_query'])) {
             $cq = $update['callback_query'];
             $cqId = $cq['id'];
@@ -109,9 +108,26 @@ class TelegramController extends Controller
                 $q = Question::findOne($qId);
                 if ($q) {
                     $ansText = "💡 <b>To'g'ri javob:</b>\n" . htmlspecialchars($q->answer ?: 'Javob kiritilmagan');
-                    $bot->sendMessage($chatId, $ansText);
+                    $bot->sendMessage($chatId, $ansText, [
+                        'inline_keyboard' => [
+                            [
+                                ['text' => '➡️ Keyingi savol', 'callback_data' => 'next_q'],
+                                ['text' => '📂 Kategoriyalar', 'callback_data' => 'show_cats']
+                            ]
+                        ]
+                    ]);
                     $bot->answerCallbackQuery($cqId, 'Javob ochildi!');
                 }
+            } elseif (str_starts_with($data, 'cat_')) {
+                $catId = (int)str_replace('cat_', '', $data);
+                $this->sendZakovatQuestion($bot, $chatId, $catId);
+                $bot->answerCallbackQuery($cqId);
+            } elseif ($data === 'next_q') {
+                $this->sendZakovatQuestion($bot, $chatId);
+                $bot->answerCallbackQuery($cqId);
+            } elseif ($data === 'show_cats') {
+                $this->sendCategoriesMenu($bot, $chatId);
+                $bot->answerCallbackQuery($cqId);
             }
         }
 
@@ -119,22 +135,56 @@ class TelegramController extends Controller
     }
 
     /**
-     * Tasodifiy Zakovat ochiq savolini jo'natish
+     * Kategoriyalar menyusini chiqarish
      */
-    private function sendRandomZakovatQuestion(TelegramBot $bot, int|string $chatId): void
+    private function sendCategoriesMenu(TelegramBot $bot, int|string $chatId): void
     {
-        /** @var Question|null $q */
-        $q = Question::find()
-            ->where(['status' => 1])
-            ->orderBy(new \yii\db\Expression('RAND()'))
-            ->one();
-
-        if (!$q) {
-            $bot->sendMessage($chatId, "Hozircha bazada savollar mavjud emas.");
+        $categories = Category::find()->where(['status' => 1])->all();
+        if (empty($categories)) {
+            $bot->sendMessage($chatId, "Hozircha faol kategoriyalar mavjud emas.");
             return;
         }
 
-        $categoryName = $q->category ? $q->category->name : 'Umumiy';
+        $buttons = [];
+        $row = [];
+        foreach ($categories as $cat) {
+            $count = $cat->getQuestions()->count();
+            $icon = $cat->icon ?: '📁';
+            $row[] = ['text' => "{$icon} {$cat->name} ({$count})", 'callback_data' => 'cat_' . $cat->id];
+            if (count($row) === 2) {
+                $buttons[] = $row;
+                $row = [];
+            }
+        }
+        if (!empty($row)) {
+            $buttons[] = $row;
+        }
+
+        $text = "📚 <b>O'zingizga qiziq bo'lgan kategoriyani tanlang:</b>\n"
+            . "<i>Har bir bo'limda miyani charxlovchi maxsus savollar jamlangan:</i>";
+
+        $bot->sendMessage($chatId, $text, ['inline_keyboard' => $buttons]);
+    }
+
+    /**
+     * Zakovat ochiq savoli
+     */
+    private function sendZakovatQuestion(TelegramBot $bot, int|string $chatId, ?int $categoryId = null): void
+    {
+        $query = Question::find()->where(['status' => 1]);
+        if ($categoryId) {
+            $query->andWhere(['category_id' => $categoryId]);
+        }
+
+        /** @var Question|null $q */
+        $q = $query->orderBy(new \yii\db\Expression('RAND()'))->one();
+
+        if (!$q) {
+            $bot->sendMessage($chatId, "Ushbu bo'limda hozircha savollar kam. Boshqa bo'limni tanlab ko'ring.");
+            return;
+        }
+
+        $categoryName = $q->category ? (($q->category->icon ? $q->category->icon . ' ' : '') . $q->category->name) : 'Umumiy';
         $diff = $q->getDifficultyLabel();
 
         $text = "📁 <b>Kategoriya:</b> {$categoryName} | <b>Daraja:</b> {$diff}\n\n"
@@ -146,7 +196,10 @@ class TelegramController extends Controller
             'inline_keyboard' => [
                 [
                     ['text' => '👁️ Javobni ko\'rish', 'callback_data' => 'answer_' . $q->id],
-                    ['text' => '➡️ Keyingi savol', 'callback_data' => 'next_question']
+                    ['text' => '➡️ Boshqa savol', 'callback_data' => $categoryId ? 'cat_' . $categoryId : 'next_q']
+                ],
+                [
+                    ['text' => '📂 Kategoriyalar', 'callback_data' => 'show_cats']
                 ]
             ]
         ];
@@ -155,20 +208,23 @@ class TelegramController extends Controller
     }
 
     /**
-     * Variantli Test Poll jo'natish
+     * Variantli Test Poll
      */
-    private function sendRandomTestPoll(TelegramBot $bot, int|string $chatId): void
+    private function sendTestPoll(TelegramBot $bot, int|string $chatId, ?int $categoryId = null): void
     {
-        /** @var Question|null $q */
-        $q = Question::find()
+        $query = Question::find()
             ->where(['status' => 1, 'type' => 'choice'])
-            ->andWhere(['not', ['option_a' => null]])
-            ->orderBy(new \yii\db\Expression('RAND()'))
-            ->one();
+            ->andWhere(['not', ['option_a' => null]]);
+
+        if ($categoryId) {
+            $query->andWhere(['category_id' => $categoryId]);
+        }
+
+        /** @var Question|null $q */
+        $q = $query->orderBy(new \yii\db\Expression('RAND()'))->one();
 
         if (!$q) {
-            // Agar choice savoli yo'q bo'lsa, zakovat savoli jo'natiladi
-            $this->sendRandomZakovatQuestion($bot, $chatId);
+            $this->sendZakovatQuestion($bot, $chatId, $categoryId);
             return;
         }
 
@@ -179,40 +235,16 @@ class TelegramController extends Controller
             $q->option_d,
         ]);
 
-        $correctIndex = 0;
         $corr = strtoupper((string)$q->correct_option);
-        if ($corr === 'B') $correctIndex = 1;
-        elseif ($corr === 'C') $correctIndex = 2;
-        elseif ($corr === 'D') $correctIndex = 3;
+        $idx = match ($corr) { 'B' => 1, 'C' => 2, 'D' => 3, default => 0 };
 
         $bot->sendQuizPoll(
             $chatId,
             $q->question_text,
             array_values($options),
-            $correctIndex,
+            $idx,
             $q->answer ?: ''
         );
-    }
-
-    /**
-     * Kategoriyalar ro'yxatini chiqarish
-     */
-    private function sendCategoriesList(TelegramBot $bot, int|string $chatId): void
-    {
-        $categories = Category::find()->where(['status' => 1])->all();
-        if (empty($categories)) {
-            $bot->sendMessage($chatId, "Hozircha faol kategoriyalar mavjud emas.");
-            return;
-        }
-
-        $text = "📚 <b>Mavjud kategoriyalar:</b>\n\n";
-        foreach ($categories as $cat) {
-            $count = $cat->getQuestions()->count();
-            $icon = $cat->icon ?: '📁';
-            $text .= "{$icon} <b>{$cat->name}</b> — {$count} ta savol\n";
-        }
-
-        $bot->sendMessage($chatId, $text);
     }
 
     /**
@@ -220,20 +252,23 @@ class TelegramController extends Controller
      */
     private function sendDailyQuestion(TelegramBot $bot, int|string $chatId): void
     {
-        $q = Question::find()->where(['status' => 1])->orderBy(['id' => SORT_DESC])->one();
+        $q = Question::find()->where(['status' => 1])->orderBy(new \yii\db\Expression('RAND()'))->one();
         if ($q) {
-            $text = "🌟 <b>Bugungi kun savoli:</b>\n\n"
+            $catName = $q->category ? (($q->category->icon ? $q->category->icon . ' ' : '') . $q->category->name) : 'Umumiy';
+            $text = "🌟 <b>Bugungi kun savoli:</b>\n"
+                . "📁 {$catName}\n\n"
                 . htmlspecialchars($q->question_text);
 
             $keyboard = [
                 'inline_keyboard' => [
-                    [['text' => '💡 Javobni ko\'rish', 'callback_data' => 'answer_' . $q->id]]
+                    [['text' => '💡 Javobni ko\'rish', 'callback_data' => 'answer_' . $q->id]],
+                    [['text' => '📂 Barcha kategoriyalar', 'callback_data' => 'show_cats']]
                 ]
             ];
 
             $bot->sendMessage($chatId, $text, $keyboard);
         } else {
-            $bot->sendMessage($chatId, "Hozircha kun savoli belgilanmagan.");
+            $bot->sendMessage($chatId, "Hozircha savollar bazasi bo'sh.");
         }
     }
 }
