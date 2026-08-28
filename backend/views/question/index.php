@@ -66,19 +66,28 @@ $this->title = 'Savollar';
 
     <div class="card">
         <div class="card-pad">
+            <?php
+            $categoryFilter = \yii\helpers\ArrayHelper::map(\common\models\Category::find()->all(), 'id', function($c) {
+                return ($c->icon ? $c->icon . ' ' : '') . $c->name;
+            });
+            ?>
+
             <?= GridView::widget([
                 'dataProvider' => $dataProvider,
+                'filterModel' => $searchModel,
                 'tableOptions' => ['class' => 'data-table table-hover mb-0'],
-                'layout' => "{items}\n<div class='d-flex justify-content-between align-items-center mt-4'>{summary}{pager}</div>",
+                'layout' => "<div class='d-flex justify-content-between align-items-center mb-3'>{summary}" . Html::a('🔄 Filtrlarni tozalash', ['index'], ['class' => 'btn btn-sm btn-ghost']) . "</div>\n{items}\n<div class='d-flex justify-content-between align-items-center mt-4'>{summary}{pager}</div>",
                 'columns' => [
                     [
                         'attribute' => 'id',
-                        'headerOptions' => ['style' => 'width: 60px; text-align: center;'],
+                        'headerOptions' => ['style' => 'width: 70px; text-align: center;'],
                         'contentOptions' => ['style' => 'text-align: center; font-weight: 600; color: var(--color-text-muted);'],
                     ],
                     [
                         'attribute' => 'category_id',
                         'label' => 'Kategoriya',
+                        'filter' => $categoryFilter,
+                        'filterInputOptions' => ['class' => 'form-select form-select-sm', 'prompt' => 'Barchasi'],
                         'format' => 'raw',
                         'value' => function ($model) {
                             if (!$model->category) {
@@ -91,17 +100,20 @@ $this->title = 'Savollar';
                     [
                         'attribute' => 'type',
                         'label' => 'Turi',
+                        'filter' => ['open' => '💡 Zakovat', 'choice' => '📝 Test (A,B,C,D)'],
+                        'filterInputOptions' => ['class' => 'form-select form-select-sm', 'prompt' => 'Barchasi'],
                         'format' => 'raw',
-                        'headerOptions' => ['style' => 'width: 120px;'],
+                        'headerOptions' => ['style' => 'width: 140px;'],
                         'value' => function ($model) {
                             return $model->type === 'choice'
-                                ? '<span class="badge bg-purple" style="background-color: #6366f1; color: #fff;">📝 Test (A,B,C,D)</span>'
+                                ? '<span class="badge" style="background-color: #6366f1; color: #fff;">📝 Test (A,B,C,D)</span>'
                                 : '<span class="badge badge--info">💡 Zakovat</span>';
                         },
                     ],
                     [
                         'attribute' => 'question_text',
                         'label' => 'Savol matni',
+                        'filterInputOptions' => ['class' => 'form-control form-control-sm', 'placeholder' => 'Savol matni bo\'yicha...'],
                         'format' => 'raw',
                         'value' => fn($model) => '<div style="font-weight: 500; max-width: 450px; line-height: 1.4;">' . 
                             Html::encode(mb_substr($model->question_text, 0, 100)) . 
@@ -111,6 +123,7 @@ $this->title = 'Savollar';
                     [
                         'attribute' => 'answer',
                         'label' => 'To\'g\'ri javob',
+                        'filterInputOptions' => ['class' => 'form-control form-control-sm', 'placeholder' => 'Javob bo\'yicha...'],
                         'format' => 'raw',
                         'value' => fn($model) => !empty($model->answer)
                             ? '<strong class="text-success" style="font-size: 0.88rem;">' . Html::encode($model->answer) . '</strong>'
@@ -119,6 +132,8 @@ $this->title = 'Savollar';
                     [
                         'attribute' => 'difficulty',
                         'label' => 'Qiyinlik',
+                        'filter' => ['easy' => 'Oson', 'medium' => 'O\'rta', 'hard' => 'Qiyin'],
+                        'filterInputOptions' => ['class' => 'form-select form-select-sm', 'prompt' => 'Barchasi'],
                         'format' => 'raw',
                         'value' => function ($model) {
                             $diff = strtolower((string)$model->difficulty);
@@ -133,6 +148,8 @@ $this->title = 'Savollar';
                     [
                         'attribute' => 'status',
                         'label' => 'Holati',
+                        'filter' => [1 => 'Faol', 0 => 'Nofaol'],
+                        'filterInputOptions' => ['class' => 'form-select form-select-sm', 'prompt' => 'Barchasi'],
                         'format' => 'raw',
                         'headerOptions' => ['style' => 'width: 100px; text-align: center;'],
                         'contentOptions' => ['style' => 'text-align: center;'],

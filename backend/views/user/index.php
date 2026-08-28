@@ -30,17 +30,19 @@ $this->title = 'Foydalanuvchilar';
         <div class="card-pad">
             <?= GridView::widget([
                 'dataProvider' => $dataProvider,
+                'filterModel' => $searchModel,
                 'tableOptions' => ['class' => 'data-table table-hover mb-0'],
-                'layout' => "{items}\n<div class='d-flex justify-content-between align-items-center mt-4'>{summary}{pager}</div>",
+                'layout' => "<div class='d-flex justify-content-between align-items-center mb-3'>{summary}" . Html::a('🔄 Filtrlarni tozalash', ['index'], ['class' => 'btn btn-sm btn-ghost']) . "</div>\n{items}\n<div class='d-flex justify-content-between align-items-center mt-4'>{summary}{pager}</div>",
                 'columns' => [
                     [
                         'attribute' => 'id',
-                        'headerOptions' => ['style' => 'width: 60px; text-align: center;'],
+                        'headerOptions' => ['style' => 'width: 70px; text-align: center;'],
                         'contentOptions' => ['style' => 'text-align: center; font-weight: 600; color: var(--color-text-muted);'],
                     ],
                     [
                         'attribute' => 'username',
                         'label' => 'Foydalanuvchi',
+                        'filterInputOptions' => ['class' => 'form-control form-control-sm', 'placeholder' => 'Username...'],
                         'format' => 'raw',
                         'value' => function ($model) {
                             $initial = mb_strtoupper(mb_substr($model->username, 0, 1));
@@ -53,13 +55,34 @@ $this->title = 'Foydalanuvchilar';
                     [
                         'attribute' => 'email',
                         'label' => 'Email',
+                        'filterInputOptions' => ['class' => 'form-control form-control-sm', 'placeholder' => 'Email...'],
                         'format' => 'email',
+                    ],
+                    [
+                        'attribute' => 'role',
+                        'label' => 'Roli',
+                        'filter' => [User::ROLE_ADMIN => '👑 Administrator', User::ROLE_USER => '👤 Foydalanuvchi'],
+                        'filterInputOptions' => ['class' => 'form-select form-select-sm', 'prompt' => 'Barchasi'],
+                        'format' => 'raw',
+                        'headerOptions' => ['style' => 'width: 150px; text-align: center;'],
+                        'contentOptions' => ['style' => 'text-align: center;'],
+                        'value' => function ($model) {
+                            return $model->role === User::ROLE_ADMIN
+                                ? '<span class="badge" style="background-color: #f59e0b; color: #fff;">👑 Admin</span>'
+                                : '<span class="badge badge--info">👤 User</span>';
+                        },
                     ],
                     [
                         'attribute' => 'status',
                         'label' => 'Holati',
+                        'filter' => [
+                            User::STATUS_ACTIVE => 'Faol',
+                            User::STATUS_INACTIVE => 'Kutilmoqda',
+                            User::STATUS_DELETED => 'Bloklangan',
+                        ],
+                        'filterInputOptions' => ['class' => 'form-select form-select-sm', 'prompt' => 'Barchasi'],
                         'format' => 'raw',
-                        'headerOptions' => ['style' => 'width: 120px; text-align: center;'],
+                        'headerOptions' => ['style' => 'width: 130px; text-align: center;'],
                         'contentOptions' => ['style' => 'text-align: center;'],
                         'value' => function ($model) {
                             if ($model->status === User::STATUS_ACTIVE) {
@@ -74,6 +97,7 @@ $this->title = 'Foydalanuvchilar';
                         'attribute' => 'created_at',
                         'label' => 'Ro\'yxatdan o\'tgan',
                         'format' => 'raw',
+                        'headerOptions' => ['style' => 'width: 140px;'],
                         'value' => fn($model) => date('d.m.Y H:i', (int)$model->created_at),
                     ],
                     [
