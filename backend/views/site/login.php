@@ -7,103 +7,94 @@ declare(strict_types=1);
 /** @var \common\models\LoginForm $model */
 
 use yii\bootstrap5\ActiveForm;
-use yii\bootstrap5\Html;
+use yii\helpers\Html;
+use yii\helpers\Url;
 
-$this->title = 'Sign in to your account';
-$htmlIcon = <<<HTML
-{label}<div class="input-group"><span class="input-group-text" aria-hidden="true">%s</span>{input}</div>{error}{hint}
-HTML;
-$labelOptions = ['class' => 'form-label fw-semibold small'];
+$this->title = 'Admin Panelga Kirish — Zakovat';
 ?>
-<div class="card border-0 overflow-hidden login-split-card">
-    <div class="row g-0">
 
-        <!-- Brand panel -->
-        <div class="col-md-5 d-none d-md-flex login-brand-panel text-white">
-            <div class="d-flex flex-column justify-content-between p-4 p-lg-5 w-100">
-                <div>
-                    <?= Html::img(
-                        Yii::getAlias('@web/images/yii3_full_white_for_dark.svg'),
-                        [
-                            'alt' => 'Yii Framework',
-                            'class' => 'mb-4',
-                            'height' => 40,
-                        ],
-                    ) ?>
-                </div>
-                <div>
-                    <h2 class="fw-bold mb-3 login-brand-title">
-                        Backend<br>Administration
-                    </h2>
-                    <p class="opacity-75 mb-0 login-brand-text">
-                        Manage your Yii2 application with the advanced admin dashboard.
-                    </p>
-                </div>
+<div class="login-wrapper" style="width: 100%; max-width: 440px; margin: 0 auto; padding: 20px;">
+    
+    <!-- Login Karta -->
+    <div class="card shadow-lg border-0 rounded-4 overflow-hidden" style="background: #ffffff; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);">
+        
+        <!-- Header qismi (Gradient fon) -->
+        <div class="p-4 text-center text-white" style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);">
+            <div style="width: 56px; height: 56px; background: rgba(255, 255, 255, 0.2); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 1.8rem; margin-bottom: 12px; backdrop-filter: blur(8px);">
+                🧠
             </div>
+            <h3 class="fw-bold mb-1" style="font-size: 1.45rem; letter-spacing: -0.5px;">Zakovat Admin</h3>
+            <p class="mb-0 opacity-80" style="font-size: 0.88rem;">Boshqaruv paneliga xush kelibsiz</p>
         </div>
 
-        <!-- Form panel -->
-        <div class="col-md-7">
-            <div class="p-4 p-lg-5">
-                <div class="text-center mb-4">
-                    <!-- Mobile-only logo -->
-                    <div class="d-md-none mb-3">
-                        <?= Html::img(
-                            Yii::getAlias('@web/images/yii3_full_black_for_light.svg'),
-                            [
-                                'alt' => 'Yii Framework',
-                                'class' => 'login-mobile-logo',
-                                'height' => 36,
-                            ],
-                        ) ?>
-                    </div>
-                    <h1 class="h3 fw-bold mb-1"><?= Html::encode($this->title) ?></h1>
-                    <p class="text-body-secondary small">Enter your credentials to access the admin panel</p>
+        <!-- Form qismi -->
+        <div class="p-4 p-md-5">
+            <?php $form = ActiveForm::begin([
+                'id' => 'login-form',
+                'fieldConfig' => [
+                    'template' => "{label}\n{input}\n{error}",
+                    'labelOptions' => ['class' => 'form-label fw-bold text-secondary small mb-1'],
+                    'inputOptions' => ['class' => 'form-control form-control-lg fs-6 rounded-3 py-2 px-3'],
+                    'errorOptions' => ['class' => 'invalid-feedback d-block small mt-1'],
+                ],
+            ]); ?>
+
+            <div class="mb-3">
+                <?= $form->field($model, 'username')->textInput([
+                    'placeholder' => 'Foydalanuvchi nomi',
+                    'autofocus' => true,
+                    'autocomplete' => 'username',
+                ])->label('👤 Foydalanuvchi nomi') ?>
+            </div>
+
+            <div class="mb-3">
+                <?= $form->field($model, 'password')->passwordInput([
+                    'placeholder' => 'Parolingizni kiriting',
+                    'autocomplete' => 'current-password',
+                ])->label('🔒 Parol') ?>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="form-check">
+                    <?= Html::activeCheckbox($model, 'rememberMe', [
+                        'class' => 'form-check-input',
+                        'label' => false,
+                        'id' => 'rememberMeCheck',
+                    ]) ?>
+                    <label class="form-check-label small text-muted user-select-none" for="rememberMeCheck">
+                        Meni eslab qol
+                    </label>
                 </div>
+            </div>
 
-                <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
+            <div class="d-grid mb-3">
+                <?= Html::submitButton('🚀 Tizimga kirish', [
+                    'class' => 'btn btn-primary btn-lg rounded-3 fw-bold shadow-sm',
+                    'style' => 'background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); border: none; padding: 12px; font-size: 1rem;',
+                    'name' => 'login-button',
+                ]) ?>
+            </div>
 
-                <div class="mb-3">
-                    <?= $form->field($model, 'username', [
-                        'options' => ['class' => 'mb-0'],
-                        'template' => sprintf($htmlIcon, '&#128100;'),
-                        'inputOptions' => [
-                            'class' => 'form-control',
-                            'placeholder' => 'username',
-                            'autofocus' => true,
-                        ],
-                    ])->textInput()->label('Your Username', $labelOptions) ?>
-                </div>
+            <?php ActiveForm::end(); ?>
 
-                <div class="mb-3">
-                    <?= $form->field($model, 'password', [
-                        'options' => ['class' => 'mb-0'],
-                        'template' => sprintf($htmlIcon, '&#128274;'),
-                        'inputOptions' => [
-                            'class' => 'form-control',
-                            'placeholder' => 'Password',
-                        ],
-                    ])->passwordInput()->label('Your Password', $labelOptions) ?>
-                </div>
+            <!-- Default login/parol eslatmasi -->
+            <div class="p-2 px-3 rounded-3 mt-3 text-center" style="background: #f8fafc; border: 1px dashed #cbd5e1; font-size: 0.82rem; color: #64748b;">
+                🔑 Standart login: <strong>admin</strong> | Parol: <strong>admin123</strong>
+            </div>
 
-                <div class="mb-4">
-                    <?= $form->field($model, 'rememberMe')->checkbox() ?>
-                </div>
-
-                <div class="d-grid">
-                    <?= Html::submitButton(
-                        'Sign in',
-                        [
-                            'class' => 'btn login-btn btn-lg rounded-3 text-white',
-                            'name' => 'login-button',
-                        ],
-                    ) ?>
-                </div>
-
-                <?php ActiveForm::end(); ?>
-
+            <!-- Bosh sahifaga qaytish -->
+            <div class="text-center mt-4">
+                <a href="/" class="text-decoration-none text-muted small" style="transition: color 0.2s;">
+                    ← Asosiy saytga qaytish
+                </a>
             </div>
         </div>
 
     </div>
+
+    <!-- Footer mualliflik -->
+    <div class="text-center mt-3 text-muted small">
+        &copy; <?= date('Y') ?> Zakovat Boshqaruv Tizimi
+    </div>
+
 </div>
