@@ -104,80 +104,77 @@ class TelegramController extends Controller
                 foreach ($res['result'] as $upd) {
                     $offset = $upd['update_id'] + 1;
 
-                    // 1. Matnli xabarlar
-                    if (isset($upd['message'])) {
-                        $msg = $upd['message'];
-                        $chatId = $msg['chat']['id'];
-                        $text = trim($msg['text'] ?? '');
-                        $name = $msg['from']['first_name'] ?? 'Foydalanuvchi';
+                    try {
+                        // 1. Matnli xabarlar
+                        if (isset($upd['message'])) {
+                            $msg = $upd['message'];
+                            $chatId = $msg['chat']['id'];
+                            $text = trim($msg['text'] ?? '');
+                            $name = $msg['from']['first_name'] ?? 'Foydalanuvchi';
 
-                        $this->stdout("Xabar [{$name}]: {$text}\n", Console::FG_CYAN);
+                            $this->stdout("Xabar [{$name}]: {$text}\n", Console::FG_CYAN);
 
-                        if ($text === '/start') {
-                            $welcome = "👋 <b>Assalomu alaykum, {$name}! Zakovat intellektual platformasiga xush kelibsiz!</b>\n\n"
-                                . "🧠 Bu yerda siz zang bosgan miyani sayqallovchi haqiqiy intellektual savollar va 4 variantli testlarni yechishingiz mumkin.\n\n"
-                                . "👇 <b>Quyidagi menyudan kerakli bo'limni tanlang:</b>";
+                            if ($text === '/start') {
+                                $welcome = "👋 <b>Assalomu alaykum, {$name}! Zakovat intellektual platformasiga xush kelibsiz!</b>\n\n"
+                                    . "🧠 Bu yerda siz zang bosgan miyani sayqallovchi haqiqiy intellektual savollar va 4 variantli testlarni yechishingiz mumkin.\n\n"
+                                    . "👇 <b>Quyidagi menyudan kerakli bo'limni tanlang:</b>";
 
-                            $keyboard = [
-                                'keyboard' => [
-                                    [['text' => '💡 Tasodifiy Zakovat savoli'], ['text' => '📝 Variantli Test']],
-                                    [['text' => '📂 Kategoriyalar'], ['text' => '🌟 Kun savoli']],
-                                ],
-                                'resize_keyboard' => true,
-                            ];
+                                $keyboard = [
+                                    'keyboard' => [
+                                        [['text' => '💡 Tasodifiy Zakovat savoli'], ['text' => '📝 Variantli Test']],
+                                        [['text' => '📂 Kategoriyalar'], ['text' => '🌟 Kun savoli']],
+                                    ],
+                                    'resize_keyboard' => true,
+                                ];
 
-                            $bot->sendMessage($chatId, $welcome, $keyboard);
-                        } elseif ($text === '/savol' || $text === '💡 Tasodifiy Zakovat savoli') {
-                            $this->sendZakovatQuestion($bot, $chatId);
-                        } elseif ($text === '/test' || $text === '📝 Variantli Test') {
-                            $this->sendTestPoll($bot, $chatId);
-                        } elseif ($text === '/kategoriyalar' || $text === '📂 Kategoriyalar') {
-                            $this->sendCategoriesMenu($bot, $chatId);
-                        } elseif ($text === '/kun_savoli' || $text === '🌟 Kun savoli') {
-                            $this->sendDailyQuestion($bot, $chatId);
-                        }
-                    }
-
-                    // 2. Inline tugmalar (Callback Queries)
-                    if (isset($upd['callback_query'])) {
-                        $cq = $upd['callback_query'];
-                        $cqId = $cq['id'];
-                        $chatId = $cq['message']['chat']['id'];
-                        $data = $cq['data'] ?? '';
-
-                        if (str_starts_with($data, 'answer_')) {
-                            // Javobni ko'rish
-                            $qId = (int)str_replace('answer_', '', $data);
-                            $q = Question::findOne($qId);
-                            if ($q) {
-                                $ansText = "💡 <b>To'g'ri javob:</b>\n" . htmlspecialchars($q->answer ?: 'Javob kiritilmagan');
-                                $bot->sendMessage($chatId, $ansText, [
-                                    'inline_keyboard' => [
-                                        [
-                                            ['text' => '➡️ Keyingi savol', 'callback_data' => 'next_q'],
-                                            ['text' => '📂 Kategoriyalar', 'callback_data' => 'show_cats']
-                                        ]
-                                    ]
-                                ]);
-                                $bot->answerCallbackQuery($cqId, 'Javob ochildi!');
+                                $bot->sendMessage($chatId, $welcome, $keyboard);
+                            } elseif ($text === '/savol' || $text === '💡 Tasodifiy Zakovat savoli') {
+                                $this->sendZakovatQuestion($bot, $chatId);
+                            } elseif ($text === '/test' || $text === '📝 Variantli Test') {
+                                $this->sendTestPoll($bot, $chatId);
+                            } elseif ($text === '/kategoriyalar' || $text === '📂 Kategoriyalar') {
+                                $this->sendCategoriesMenu($bot, $chatId);
+                            } elseif ($text === '/kun_savoli' || $text === '🌟 Kun savoli') {
+                                $this->sendDailyQuestion($bot, $chatId);
                             }
-                        } elseif (str_starts_with($data, 'cat_')) {
-                            // Kategoriya tanlandi
-                            $catId = (int)str_replace('cat_', '', $data);
-                            $this->sendZakovatQuestion($bot, $chatId, $catId);
-                            $bot->answerCallbackQuery($cqId);
-                        } elseif (str_starts_with($data, 'cattest_')) {
-                            // Kategoriya bo'yicha test
-                            $catId = (int)str_replace('cattest_', '', $data);
-                            $this->sendTestPoll($bot, $chatId, $catId);
-                            $bot->answerCallbackQuery($cqId);
-                        } elseif ($data === 'next_q') {
-                            $this->sendZakovatQuestion($bot, $chatId);
-                            $bot->answerCallbackQuery($cqId);
-                        } elseif ($data === 'show_cats') {
-                            $this->sendCategoriesMenu($bot, $chatId);
-                            $bot->answerCallbackQuery($cqId);
                         }
+
+                        // 2. Inline tugmalar (Callback Queries)
+                        if (isset($upd['callback_query'])) {
+                            $cq = $upd['callback_query'];
+                            $cqId = $cq['id'];
+                            $chatId = $cq['message']['chat']['id'];
+                            $data = $cq['data'] ?? '';
+
+                            if (str_starts_with($data, 'answer_')) {
+                                $qId = (int)str_replace('answer_', '', $data);
+                                $q = Question::findOne($qId);
+                                if ($q) {
+                                    $ansText = "💡 <b>To'g'ri javob:</b>\n" . htmlspecialchars($q->answer ?: 'Javob kiritilmagan');
+                                    $bot->sendMessage($chatId, $ansText, [
+                                        'inline_keyboard' => [
+                                            [
+                                                ['text' => '➡️ Keyingi savol', 'callback_data' => 'next_q'],
+                                                ['text' => '📂 Kategoriyalar', 'callback_data' => 'show_cats']
+                                            ]
+                                        ]
+                                    ]);
+                                    $bot->answerCallbackQuery($cqId, 'Javob ochildi!');
+                                }
+                            } elseif (str_starts_with($data, 'cat_')) {
+                                $catId = (int)str_replace('cat_', '', $data);
+                                $this->sendZakovatQuestion($bot, $chatId, $catId);
+                                $bot->answerCallbackQuery($cqId);
+                            } elseif ($data === 'next_q') {
+                                $this->sendZakovatQuestion($bot, $chatId);
+                                $bot->answerCallbackQuery($cqId);
+                            } elseif ($data === 'show_cats') {
+                                $this->sendCategoriesMenu($bot, $chatId);
+                                $bot->answerCallbackQuery($cqId);
+                            }
+                        }
+                    } catch (\Throwable $e) {
+                        $this->stdout("❌ Xatolik yuz berdi: " . $e->getMessage() . "\n", Console::FG_RED);
                     }
                 }
             }
