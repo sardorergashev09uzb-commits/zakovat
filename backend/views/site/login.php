@@ -77,10 +77,7 @@ $this->title = 'Admin Panelga Kirish — Zakovat';
 
             <?php ActiveForm::end(); ?>
 
-            <!-- Default login/parol eslatmasi -->
-            <div class="p-2 px-3 rounded-3 mt-3 text-center" style="background: #f8fafc; border: 1px dashed #cbd5e1; font-size: 0.82rem; color: #64748b;">
-                🔑 Standart login: <strong>admin</strong> | Parol: <strong>admin123</strong>
-            </div>
+
 
             <!-- Bosh sahifaga qaytish -->
             <div class="text-center mt-4">
