@@ -144,9 +144,6 @@ class SiteController extends Controller
     /**
      * Foydalanuvchi profili (profil.php)
      */
-    /**
-     * Foydalanuvchi profili (profil.php)
-     */
     public function actionProfil()
     {
         /** @var \common\models\User $user */

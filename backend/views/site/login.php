@@ -77,9 +77,6 @@ $this->title = 'Admin Panelga Kirish — Zakovat';
 
             <?php ActiveForm::end(); ?>
 
-
-
-            <!-- Bosh sahifaga qaytish -->
             <div class="text-center mt-4">
                 <a href="/" class="text-decoration-none text-muted small" style="transition: color 0.2s;">
                     ← Asosiy saytga qaytish
