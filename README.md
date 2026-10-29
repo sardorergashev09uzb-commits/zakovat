@@ -1,6 +1,11 @@
 # 🎓 Zakovat — Advanced Intellectual Quiz & Question Platform
 
 <p align="center">
+  <a href="README.md">🇬🇧 English Version</a> •
+  <a href="README.de.md">🇩🇪 Deutsche Version (Ausbildung-Portfolio)</a>
+</p>
+
+<p align="center">
   <img src="https://img.shields.io/badge/PHP-8.2%2B-777BB4?style=for-the-badge&logo=php&logoColor=white" alt="PHP" />
   <img src="https://img.shields.io/badge/Yii2-Advanced%20MVC-0073AA?style=for-the-badge&logo=yii&logoColor=white" alt="Yii2" />
   <img src="https://img.shields.io/badge/MySQL-CleverCloud%20InnoDB-4479A1?style=for-the-badge&logo=mysql&logoColor=white" alt="MySQL" />
@@ -12,192 +17,165 @@
 
 ---
 
-## 📌 Jonli Havolalar (Live Demos)
+## 📌 Live Deployments
 
-| Xizmat | Tavsif | Havola |
+| Component | Description | Live URL |
 | :--- | :--- | :--- |
-| 🌐 **Asosiy Veb-sayt** | Intellektual o'yinlar, testlar va foydalanuvchi profili | [zakovat-ktmg.onrender.com](https://zakovat-ktmg.onrender.com) |
-| 👑 **Admin Boshqaruv Paneli** | Savollar, toifalar va foydalanuvchilar monitoringi | [zakovat-ktmg.onrender.com/admin](https://zakovat-ktmg.onrender.com/admin) |
-| 🤖 **Telegram Bot (24/7)** | Savol-javob, Quiz Poll va kun savollari | [@zakovat_savol_007_bot](https://t.me/zakovat_savol_007_bot) |
-| ☁️ **Bulutli Ma'lumotlar Bazasi** | Yuqori tezlikdagi Clever Cloud MySQL hosting | `Clever Cloud Paris (EU)` |
+| 🌐 **Main Web Application** | Interactive quiz games, category selection, and user profiles | [zakovat-ktmg.onrender.com](https://zakovat-ktmg.onrender.com) |
+| 👑 **Admin Dashboard** | Question management, live filters, CSV import/export & user control | [zakovat-ktmg.onrender.com/admin](https://zakovat-ktmg.onrender.com/admin) |
+| 🤖 **Telegram Bot (24/7)** | Autonomous knowledge bot, native Quiz Polls, and daily challenges | [@zakovat_savol_007_bot](https://t.me/zakovat_savol_007_bot) |
+| ☁️ **Cloud Database** | High-performance managed MySQL 8 with InnoDB on Clever Cloud | `Clever Cloud Paris (EU)` |
 
 ---
 
-## 📖 Loyiha Haqida
+## 📖 Project Overview & Purpose
 
-**Zakovat** — foydalanuvchilarning intellektual salohiyatini sinash, bilim darajasini yuksaltirish va turli sohalar (Tarix, Fan, IT, Adabiyot, Mantiq) bo'yicha interaktiv bilim bellashuvlarini o'tkazish uchun noldan to'liq arxitekturasi ishlab chiqilgan zamonaviy veb-platforma va ekotizimdir.
+**Zakovat** is a full-stack intellectual quiz and question platform designed to evaluate user knowledge, stimulate analytical thinking, and host competitive intellectual challenges across multiple disciplines (History, Science, IT, Literature, Logic).
 
-Loyiha **Yii2 Advanced** arxitekturasi asosida ishlab chiqilgan bo'lib, o'zaro bog'langan 3 ta asosiy bo'g'indan iborat:
-1. **Frontend:** Foydalanuvchilar uchun qulay, zamonaviy UI va 2 xil intellektual o'yin rejimi;
-2. **Backend (Admin Panel):** Kuchli filtrlash, qidiruv, monitoring hamda ommaviy CSV import/eksport tizimi;
-3. **Console & Daemon:** Telegram Bot uchun 24/7 Webhook integratsiyasi va lokal Polling daemon tizimi.
+Built on the **Yii2 Advanced** architecture, this project serves as a comprehensive portfolio application demonstrating real-world backend engineering skills, clean MVC structure, secure database modeling, containerization, and cloud deployment.
 
 ---
 
-## 🚀 Mualliflik Yechimlari va Asosiy Imkoniyatlar (Key Features)
+## 💡 Individual Contributions & Core Engineering Competencies
 
-Ushbu platforma faqat shablon yechim emas, balki real ishlab chiqarish (production) talablariga mos ravishda dasturlangan:
+This project was built to demonstrate deep practical understanding of software engineering fundamentals:
 
-### 1. 🧠 2 Xil Interaktiv O'yin Dvigateli (Game Engines)
-- **💡 Zakovat Rejimi (Ochiq Mantiqiy Savol):**
-  - Aniq 60 soniyalik aylanma animatsiyali SVG **"Bilim halqasi"** teskari taymeri;
-  - Jamoaviy yoki yakkaxon fikrlash uchun qulay interfeys, vaqt tugagach yoki tugma bosilgach to'g'ri javobni tahlili bilan ko'rsatish.
-- **📝 Variantli Test Rejimi (A, B, C, D Tanlovli Test):**
-  - Foydalanuvchi variantni bosishi bilan real vaqtda to'g'ri/noto'g'ri natijani ko'rsatish;
-  - Toifalar (fanlar) bo'yicha saralash va ballar statistikasini hisoblash.
+### 1. 🏗️ Multi-Tier Architecture & Clean MVC
+- **Separation of Concerns:**
+  - `frontend/`: User-facing views, responsive quiz interfaces, and authentication.
+  - `backend/`: Restricted administrative dashboard secured by Role-Based Access Control (RBAC).
+  - `common/`: Core shared models (`ActiveRecord`), business logic, and reusable Telegram API components.
+  - `console/`: Background daemons, webhook setup utilities, and CLI long-polling tools.
 
-### 2. 🤖 Avtonom Telegram Bot Ekotizimi (`@zakovat_savol_007_bot`)
-- **Noldan yozilgan API Komponent:** `common/components/TelegramBot.php` yordamida cURL orqali to'g'ridan-to'g'ri Telegram Bot API bilan tezkor va xavfsiz ulanish.
-- **2 xil rejimda ishlash:**
-  - *Webhook (Production):* Render.com da 24/7 doimiy avtonom rejimda kiruvchi JSON yangilanishlarni qabul qilish.
-  - *Polling Daemon (CLI):* Dasturchi kompyuterida qulay sinash uchun `php yii telegram/poll` CLI buyrug'i.
-- **Native Quiz Polls:** Telegramning rasmiy `sendPoll (type: quiz)` mexanizmi orqali foydalanuvchiga to'g'ridan-to'g'ri test yuborish va javob izohini ko'rsatish.
-- **Interaktiv Inline Keyboard:** Savollar o'rtasida navigatsiya qilish (`Next`, `Categories`, `Reveal Answer`).
+### 2. 🤖 Autonomous Telegram Bot Ecosystem (`common/components/TelegramBot.php`)
+- **Custom API Component:** Built a standalone, zero-dependency cURL wrapper interacting directly with the official Telegram Bot API.
+- **Webhook & Polling Dual-Mode:**
+  - *Webhook (Production):* Handles incoming HTTP POST payloads asynchronously on Render.com with dedicated CSRF handling and JSON validation.
+  - *Polling Daemon (CLI):* Enables local debugging via `php yii telegram/poll`.
+- **Native Quiz Polls:** Utilizes Telegram’s native `sendPoll (type: quiz)` API with real-time answer verification and instant explanations.
+- **Stateful Callback Queries:** Interactive Inline Keyboards enabling dynamic pagination, category browsing, and instant answer reveals.
 
-### 3. 📊 Kuchli Boshqaruv Paneli (Admin Dashboard)
-- **Keng Qamrovli Dinamik Qidiruv & Filtrlash:**
-  - `QuestionSearch` va `UserSearch` modellari orqali toifalar, qiyinlik darajalari (Oson, O'rta, Qiyin), savol turlari va holati bo'yicha tezkor live-filtrlar.
-  - Xavfsiz parametrlangan so'rovlar (`ActiveDataProvider`) orqali optimallashtirilgan SQL navigatsiyasi va pagination.
-- **Ommaviy CSV Import va Eksport:**
-  - Yuzlab savollarni bitta tugma orqali CSV formatda bazaga import qilish;
-  - Fayldagi toifa nomlarini avtomatik tahlil qilish, mavjud bo'lmagan toifalarni avtomatik yaratish (`slug` va UTF-8 xavfsizligi bilan);
-  - Adminlar uchun shablon CSV faylini yuklab olish imkoniyati.
+### 3. 📊 Enterprise Admin Panel with Dynamic Filtering & CSV Engine
+- **Search & Filtering Engine (`QuestionSearch`, `UserSearch`):** Parameterized `ActiveDataProvider` queries preventing SQL injection while supporting debounced live search and multi-criteria dropdown filters (Category, Type, Difficulty, Status).
+- **High-Performance CSV Engine:**
+  - Bulk import and export supporting hundreds of records in seconds.
+  - Automatic UTF-8 BOM detection, sanitization, and category resolving.
+  - Auto-generation of new categories with URL-friendly slugs on the fly.
 
-### 4. 🐳 Docker & Production Arxitekturasi (Cloud-Native)
-- **Yagona VirtualHost Arxitekturasi (`apache-zakovat.conf`):**
-  - Render.com bitta konteynerida asosiy domenni `frontend/web` ga, `/admin` prefiksini esa to'g'ridan-to'g'ri `backend/web` ga uzluksiz yo'naltiruvchi maxsus Apache konfiguratsiyasi.
-- **Production Init Avtomatizatsiyasi:** Docker build vaqtida `composer install --optimize-autoloader` va `php init --env=Production` orqali tizimni to'liq himoyalangan, kesh yoqilgan holatda ishga tushirish.
-- **Database Schema Caching:** MySQL so'rovlarini 24 soatga keshlab, bazaga bo'ladigan yuklamani keskin kamaytirish.
+### 4. 🧠 Dual Interactive Quiz Engines
+- **Zakovat Mode (Open Question):** 60-second SVG circular countdown timer ("Ring of Knowledge") with timed answer reveal for team or solo brainstorming.
+- **Choice Quiz Mode (Multiple Choice):** Real-time 4-option single-choice engine with instant feedback and scoring.
 
-### 5. 🛡️ Xavfsizlik va Arxitektura Standartlari
-- **RBAC (Role-Based Access Control):** Admin va User rollari o'rtasida qat'iy ajratilgan huquqlar (Broken Access Control himoyasi).
-- **SQL Injection Himoyasi:** Yii2 Active Record va PDO Prepared Statements.
-- **XSS & CSRF Himoyasi:** Barcha ma'lumotlar chiqishida `Html::encode`, barcha formalarda CSRF token tekshiruvi.
-- **Parollar Xavfsizligi:** Bcrypt algoritmi orqali ishonchli xeshirlangan parollar.
+### 5. 🐳 Cloud-Native Docker & Unified VirtualHost Architecture
+- **Multi-App Single Container Routing (`apache-zakovat.conf`):** Custom Apache virtual host configuration enabling the root URL `/` to serve the Frontend application while routing `/admin` to the Backend application within a single lightweight Render web service.
+- **Production Automation:** Automated `composer install --optimize-autoloader`, `php init --env=Production`, and enabled MySQL schema caching (`enableSchemaCache => true`) for ultra-low database query overhead.
 
 ---
 
-## 🏗️ Tizim Arxitekturasi
+## 🤖 AI-Assisted Development & Engineering Transparency
+
+In modern software engineering, AI is a powerful productivity amplifier. This project transparently highlights how AI was leveraged alongside core individual engineering:
+
+| Domain | Human Developer Ownership | AI Tooling Assistance |
+| :--- | :--- | :--- |
+| **Architecture & Database** | Designed the multi-tier schema (`user`, `category`, `question`, `site_setting`), foreign key constraints, and RBAC security rules. | Assisted in formatting schemas and drafting initial migration templates. |
+| **Business Logic & Core Code** | Implemented controller actions, CSV parsing algorithms, Webhook handling, and understands every line in depth. | Accelerated repetitive boilerplate code generation and syntax refinement. |
+| **UI/UX & Styling** | Structured the user flows, responsive layout, and design system. | Generated modern CSS gradients, glassmorphism card styling, and SVG timer animations. |
+| **Content & Testing** | Defined question categorization, difficulty weighting, and educational structure. | Generated diverse initial test question datasets for demonstration. |
+| **Debugging & Problem Solving** | Diagnosed 404 routing anomalies on Render.com, adjusted Apache Rewrite rules, and fixed webhook update loops. | Provided quick reference syntax checks for Apache directives and Dockerfile best practices. |
+
+> **Takeaway:** I have a comprehensive grasp of this entire codebase and can confidently explain, refactor, or extend any part of it during technical interviews. AI was used as a productivity enhancer, never as a substitute for technical competence.
+
+---
+
+## 🛡️ Security & Quality Standards
+
+- **SQL Injection Prevention:** Strictly relies on Yii2 `ActiveRecord` and PDO Prepared Statements.
+- **XSS Mitigation:** Universal data sanitization and output escaping via `Html::encode()`.
+- **CSRF Protection:** Enabled on all user-facing state-changing HTTP forms, with safe, deliberate exemption for the external Telegram Webhook endpoint.
+- **Role-Based Access Control (RBAC):** Dedicated access control filters preventing unauthorized access to the admin panel.
+- **12-Factor App Compliance:** Zero hardcoded production credentials in version control; environment variables (`getenv`) are used for DB hosts, credentials, and bot tokens.
+
+---
+
+## 🏗️ System Architecture & Data Flow
 
 ```
-                             ┌─────────────────────────────────┐
-                             │    Foydalanuvchi & Brauzer      │
-                             └───────────────┬─────────────────┘
-                                             │ HTTPS
-                                             ▼
-                             ┌─────────────────────────────────┐
-                             │       Render.com Web Service    │
-                             │   (Docker PHP 8.2 + Apache)     │
-                             └───────┬─────────────────┬───────┘
-                                     │                 │
-             ┌───────────────────────┴──────┐   ┌──────┴────────────────────────┐
-             ▼                              ▼   ▼                               ▼
-  ┌──────────────────────┐   ┌──────────────────────┐   ┌───────────────────────────────┐
-  │   / (Frontend Web)   │   │  /admin (Backend Web)│   │ /telegram/webhook (Controller)│
-  │  - Zakovat Quiz UI   │   │  - Savollar CRUD     │   └───────────────▲───────────────┘
-  │  - Test (A,B,C,D)    │   │  - CSV Import/Export │                   │ Webhook Updates
-  │  - Profil & Auth     │   │  - User Management   │   ┌───────────────┴───────────────┐
-  └──────────┬───────────┘   └──────────┬───────────┘   │     Telegram Bot API Server   │
-             │                          │               │   (@zakovat_savol_007_bot)    │
-             └──────────────────┬───────┘               └───────────────────────────────┘
-                                │
-                                ▼
-             ┌──────────────────────────────────────┐
-             │       Clever Cloud MySQL 8 (SSL)     │
-             │  (user, category, question, setting) │
-             └──────────────────────────────────────┘
+                         ┌────────────────────────────────────┐
+                         │   User / Web Browser & Telegram    │
+                         └─────────────────┬──────────────────┘
+                                           │ HTTPS (Port 443)
+                                           ▼
+                         ┌────────────────────────────────────┐
+                         │   Render.com Web Service (Docker)  │
+                         │   PHP 8.2 + Apache2 (mod_rewrite)  │
+                         └────────┬───────────────────┬───────┘
+                                  │                   │
+         ┌────────────────────────┴───────┐   ┌───────┴────────────────────────┐
+         ▼                                ▼   ▼                                ▼
+┌──────────────────┐    ┌──────────────────┐  ┌────────────────────────────────┐
+│ / (Frontend Web) │    │  /admin (Backend)│  │ /telegram/webhook (Controller) │
+│ - Quiz & Test UI │    │  - Questions CRUD│  └──────────────▲─────────────────┘
+│ - Profil & Auth  │    │  - CSV Engine    │                 │ JSON Webhook Updates
+└────────┬─────────┘    └────────┬─────────┘  ┌──────────────┴─────────────────┐
+         │                       │            │    Official Telegram API       │
+         └───────────────┬───────┘            │   (@zakovat_savol_007_bot)     │
+                         │                    └────────────────────────────────┘
+                         ▼
+        ┌──────────────────────────────────┐
+        │   Clever Cloud MySQL 8 (InnoDB)  │
+        │  Tables: user, category,         │
+        │  question, site_setting          │
+        └──────────────────────────────────┘
 ```
 
 ---
 
-## 🗄️ Ma'lumotlar Bazasi Sxemasi (ER-Model)
+## 🗄️ Relational Database Schema (ER-Design)
 
-| Jadval | Asosiy Ustunlar | Maqsadi |
+| Table | Key Columns | Description |
 | :--- | :--- | :--- |
-| **`user`** | `id`, `username`, `email`, `password_hash`, `role`, `status`, `created_at` | Foydalanuvchilar va administratorlar hisoblari |
-| **`category`** | `id`, `name`, `slug`, `icon`, `status`, `created_at` | Savollar yo'nalishlari (Tarix, IT, Geografiya va h.k.) |
-| **`question`** | `id`, `category_id`, `type`, `question_text`, `answer`, `option_a..d`, `correct_option`, `difficulty`, `status` | Ochiq va test formatidagi barcha savollar bazasi |
-| **`site_setting`**| `id`, `key`, `value`, `description`, `updated_at` | Dinamik platforma sozlamalari va sarlavhalari |
+| **`user`** | `id`, `username`, `email`, `password_hash`, `role`, `status`, `created_at` | Authenticated users and administrators |
+| **`category`** | `id`, `name`, `slug`, `icon`, `status`, `created_at` | Question subjects (History, Science, IT, etc.) |
+| **`question`** | `id`, `category_id`, `type`, `question_text`, `answer`, `option_a..d`, `correct_option`, `difficulty`, `status` | Repository of open-ended and 4-choice questions |
+| **`site_setting`**| `id`, `key`, `value`, `description`, `updated_at` | Dynamic portal settings and metadata |
 
 ---
 
-## 💻 Mahalliy Muhitda O'rnatish (Local Setup)
+## 💻 Local Setup Guide
 
-Loyiha lokal kompyuterda (Laragon, XAMPP yoki Docker) tezda ishga tushadi:
+Requirements: PHP 8.2+, Composer, MySQL.
 
-### 1. Repositoriyani klonlash:
 ```bash
+# 1. Clone the repository
 git clone https://github.com/sardorergashev09uzb-commits/zakovat.git
 cd zakovat
-```
 
-### 2. Bog'liqliklarni o'rnatish:
-```bash
+# 2. Install dependencies
 composer install
-```
 
-### 3. Loyihani initsializatsiya qilish:
-```bash
-php init
-# Rivojlantirish muhiti uchun: 0 (Development)
-```
+# 3. Initialize environment (Development)
+php init --env=Development
 
-### 4. Ma'lumotlar bazasini ulash:
-`common/config/main-local.php` faylida o'z lokal MySQL bazangizni ko'rsating:
-```php
-'components' => [
-    'db' => [
-        'class' => \yii\db\Connection::class,
-        'dsn' => 'mysql:host=localhost;dbname=zakovat',
-        'username' => 'root',
-        'password' => '',
-        'charset' => 'utf8mb4',
-    ],
-],
-```
-
-### 5. Migratsiyalarni ishga tushirish:
-```bash
+# 4. Configure local DB in common/config/main-local.php
+# 5. Run database migrations
 php yii migrate
-```
 
-### 6. Telegram Botni sinash:
-`common/config/params-local.php` ga bot tokeningizni kiriting va konsolda ishga tushiring:
-```bash
+# 6. Test Telegram Bot in local polling mode (optional)
 php yii telegram/poll
 ```
 
 ---
 
-## ⚡ CLI Konsol Buyruqlari
+## 👨‍💻 Developer Profile
 
-Adminlar va tizim uchun qulay boshqaruv buyruqlari tayyorlangan:
-
-```bash
-# Telegram Webhook manzilini o'rnatish
-php yii telegram/set-webhook https://sizning-domen.uz/telegram/webhook
-
-# Botni Polling rejimida uzluksiz ishga tushirish (lokal test uchun)
-php yii telegram/poll
-
-# Istalgan chat yoki kanalga kun savolini yuborish
-php yii telegram/daily-question @chat_yoki_id
-
-# Bot ishlayotganini tekshirish uchun test xabari yuborish
-php yii telegram/test @chat_yoki_id
-```
-
----
-
-## 👨‍💻 Muallif & Portfolio
-
-- **Muallif va Arxitektor:** **Sardorbek Ergashev**
+- **Developer:** **Sardorbek Ergashev**
 - **GitHub:** [@sardorergashev09uzb-commits](https://github.com/sardorergashev09uzb-commits)
-- **Rol:** Full-Stack Developer (Yii2, PHP, MySQL, Telegram Bot, Docker, Cloud DevOps)
-- **Loyihaning maqsadi:** Zamonaviy backend arxitekturasi, toza MVC yondashuvi, xavfsizlik va bulutli avtomatizatsiyani namoyish etuvchi portfolio loyihasi.
+- **Target Opportunity:** Apprenticeship / Ausbildung as *Fachinformatiker für Anwendungsentwicklung*
+- **Core Skills:** PHP 8.2+, Yii2 / Laravel concepts, MySQL Relational Database Design, REST / Webhooks, Docker, Clean Code & Security.
 
 ---
 
 <p align="center">
-  <b>© 2026 Zakovat Intellektual Platformasi. Barcha huquqlar himoyalangan.</b>
+  <b>© 2026 Zakovat Platform • Built with passion for clean software architecture and modern web engineering.</b>
 </p>
