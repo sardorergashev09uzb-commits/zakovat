@@ -1,6 +1,11 @@
 # 🎓 Zakovat — Advanced Intellectual Quiz & Question Platform
 
 <p align="center">
+  <a href="https://zakovat-ktmg.onrender.com"><b>🌐 Live Demo: zakovat-ktmg.onrender.com</b></a> •
+  <a href="https://t.me/zakovat_savol_007_bot"><b>🤖 Telegram Bot: @zakovat_savol_007_bot</b></a>
+</p>
+
+<p align="center">
   <a href="README.md">🇬🇧 English Version</a> •
   <a href="README.de.md">🇩🇪 Deutsche Version (Ausbildung-Portfolio)</a>
 </p>
