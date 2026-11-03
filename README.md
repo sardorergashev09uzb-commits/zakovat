@@ -26,6 +26,10 @@
 | 🤖 **Telegram Bot (24/7)** | Autonomous knowledge bot, native Quiz Polls, and daily challenges | [@zakovat_savol_007_bot](https://t.me/zakovat_savol_007_bot) |
 | ☁️ **Cloud Database** | High-performance managed MySQL 8 with InnoDB on Clever Cloud | `Clever Cloud Paris (EU)` |
 
+> [!NOTE]
+> **Hosting & Cold Start Notice:**  
+> The web application is hosted on Render.com's Free Tier. To conserve resources, free instances spin down after periods of inactivity. If the service has been idle, the initial request may take **30–50 seconds** while the Docker container wakes up ("cold start"). Subsequent requests will load instantaneously.
+
 ---
 
 ## 📖 Project Overview & Purpose

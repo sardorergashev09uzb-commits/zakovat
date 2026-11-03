@@ -26,6 +26,10 @@
 | 🤖 **Telegram Bot (24/7)** | Wissensfragen, Multiple-Choice Quiz-Polls und Tagesfragen | [@zakovat_savol_007_bot](https://t.me/zakovat_savol_007_bot) |
 | ☁️ **Cloud-Datenbank** | Skalierbare MySQL 8 Instanz mit InnoDB auf Clever Cloud | `Clever Cloud (EU Paris)` |
 
+> [!NOTE]
+> **Wichtiger Hinweis zum Hosting (Kaltstart / Cold Start):**  
+> Die Webanwendung wird auf der kostenlosen Free-Tier-Infrastruktur von Render.com betrieben. Aus Ressourcengründen wird der Container bei längerer Inaktivität vorübergehend heruntergefahren. Beim ersten Aufruf der Live-Demo kann es daher **ca. 30 bis 50 Sekunden** dauern, bis der Docker-Container aufgeweckt wird ("Cold Start"). Danach arbeitet die Plattform gewohnt performant und ohne Verzögerung.
+
 ---
 
 ## 📖 Projektübersicht & Zielsetzung
